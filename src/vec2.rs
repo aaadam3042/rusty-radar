@@ -1,15 +1,9 @@
-use std::ops::{ Add, Sub, AddAssign, SubAssign, Mul,MulAssign, Div, DivAssign, Neg, };
+use std::ops::{ Add, Sub, AddAssign, SubAssign, Mul,MulAssign, Div, DivAssign, Neg };
 
 #[derive(Debug, PartialEq)]
 pub struct Vec2 {
     pub x: f64,
     pub y: f64,
-}
-
-impl Vec2 {
-    pub fn new (x: f64, y:f64) -> Self {
-        Self { x, y }
-    }
 }
 
 impl AddAssign for Vec2 {
@@ -87,4 +81,39 @@ impl Neg for Vec2 {
     }
 }
 
-// TODO: implement dot prod, length, normalisation
+impl Vec2 {
+    pub fn new(x: f64, y:f64) -> Self {
+        Self { x, y }
+    }
+
+    pub fn dot(&self, rhs: Self) -> f64 {
+        (self.x * rhs.x) + (self.y * rhs.y)
+    }
+
+    pub fn length_squared(&self) -> f64 {
+        (self.x * self.x) + (self.y * self.y)
+    }
+
+    pub fn length(&self) -> f64 {
+        self.length_squared().sqrt()
+    }
+
+    pub fn normalise(&self) -> Option<Self> {
+        let length = self.length();
+        if length == 0.0 {
+            return None
+        }
+
+        Some(Self {x: self.x / length, y: self.y / length})
+    }
+
+    pub fn distance_to_squared(&self, rhs: Self) -> f64 {
+        let x_component = self.x - rhs.x;
+        let y_component = self.y - rhs.y;
+        x_component * x_component + y_component * y_component
+    }
+
+    pub fn distance_to(&self, rhs: Self) -> f64 {
+        self.distance_to_squared(rhs).sqrt()
+    }
+}
